@@ -32,13 +32,13 @@ def get_server_pid():
 def start_server():
     """Inicia el servidor Django"""
     if get_server_pid():
-        print("🟡 El servidor ya está corriendo!")
+        print("El servidor ya está corriendo!")
         return
     
-    print(f"🚀 Iniciando servidor Django en http://{HOST}:{PORT}")
+    print(f"Iniciando servidor Django en http://{HOST}:{PORT}")
     
     # Ejecutar migraciones automáticamente
-    print("📦 Aplicando migraciones...")
+    print("Aplicando migraciones...")
     subprocess.run(['python3', 'manage.py', 'migrate'], check=True)
     
     # Iniciar servidor en background
@@ -52,22 +52,22 @@ def start_server():
     with open(PID_FILE, 'w') as f:
         f.write(str(process.pid))
     
-    print(f"✅ Servidor iniciado con PID {process.pid}")
-    print(f"🌐 Accesible en: http://localhost:{PORT}")
-    print(f"🌐 API disponible en: http://localhost:{PORT}/api/")
+    print(f"Servidor iniciado con PID {process.pid}")
+    print(f"Accesible en: http://localhost:{PORT}")
+    print(f"API disponible en: http://localhost:{PORT}/api/")
     
     # Esperar un poco y verificar que el servidor esté corriendo
     time.sleep(2)
     if get_server_pid():
-        print("✅ Servidor verificado y funcionando correctamente")
+        print("Servidor verificado y funcionando correctamente")
     else:
-        print("❌ Error al iniciar el servidor")
+        print("Error al iniciar el servidor")
 
 def stop_server():
     """Detiene el servidor Django"""
     pid = get_server_pid()
     if not pid:
-        print("🟡 El servidor no está corriendo")
+        print("El servidor no está corriendo")
         return
     
     try:
@@ -79,12 +79,12 @@ def stop_server():
             os.kill(pid, 0)
             # Si llegamos aquí, el proceso sigue vivo, forzar
             os.kill(pid, signal.SIGKILL)
-            print("🔴 Servidor detenido forzadamente")
+            print("Servidor detenido forzadamente")
         except OSError:
-            print("✅ Servidor detenido correctamente")
+            print("Servidor detenido correctamente")
             
     except OSError:
-        print("❌ Error al detener el servidor")
+        print("Error al detener el servidor")
     
     # Limpiar archivo PID
     if PID_FILE.exists():
@@ -92,7 +92,7 @@ def stop_server():
 
 def restart_server():
     """Reinicia el servidor Django"""
-    print("🔄 Reiniciando servidor...")
+    print("Reiniciando servidor...")
     stop_server()
     time.sleep(1)
     start_server()
@@ -101,10 +101,10 @@ def server_status():
     """Muestra el estado del servidor"""
     pid = get_server_pid()
     if pid:
-        print(f"✅ Servidor corriendo con PID {pid}")
-        print(f"🌐 Disponible en: http://localhost:{PORT}")
+        print(f"Servidor corriendo con PID {pid}")
+        print(f"Disponible en: http://localhost:{PORT}")
     else:
-        print("🔴 Servidor detenido")
+        print("Servidor detenido")
 
 def main():
     if len(sys.argv) < 2:

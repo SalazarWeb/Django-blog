@@ -1,22 +1,22 @@
 ---
-title: "Mi Primer Post desde Markdown"
-slug: "mi-primer-post"
+title: "Post de Prueba del Sistema"
+slug: "post-prueba-sistema"
 author: "admin"
-category: "Tecnología"
-excerpt: "Este es mi primer post creado desde un archivo Markdown"
+category: "Prueba"
+excerpt: "Post de prueba para verificar el funcionamiento del sistema de archivos Markdown"
 featured_image: ""
 status: "published"
 created_at: "2025-06-06"
-tags: ["markdown", "blog", "tecnología"]
+tags: ["markdown", "blog", "prueba"]
 ---
 
-# Mi Primer Post desde Markdown
+# Post de Prueba del Sistema
 
-Este es el contenido de mi primer post creado usando un archivo **Markdown**. 
+Este es un post de prueba para verificar que el sistema de archivos **Markdown** funciona correctamente.
 
-## Características del nuevo sistema
+## Características del sistema actualizado
 
-- Soporte para archivos `.md` y `.json`
+- Soporte exclusivo para archivos `.md`
 - Frontmatter para metadatos
 - Conversión automática de Markdown a HTML
 - Búsqueda en contenido

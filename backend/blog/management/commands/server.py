@@ -52,10 +52,10 @@ class Command(BaseCommand):
     def start_server(self, host, port, auto_migrate):
         """Inicia el servidor Django"""
         if auto_migrate:
-            self.stdout.write("📦 Aplicando migraciones...")
+            self.stdout.write("Aplicando migraciones...")
             execute_from_command_line(['manage.py', 'migrate'])
         
-        self.stdout.write(f"🚀 Iniciando servidor Django en http://{host}:{port}")
+        self.stdout.write(f"Iniciando servidor Django en http://{host}:{port}")
         execute_from_command_line(['manage.py', 'runserver', f'{host}:{port}'])
 
     def stop_server(self):
@@ -68,15 +68,15 @@ class Command(BaseCommand):
                 pids = result.stdout.strip().split('\n')
                 for pid in pids:
                     os.kill(int(pid), signal.SIGTERM)
-                self.stdout.write("✅ Servidor detenido")
+                self.stdout.write("Servidor detenido")
             else:
-                self.stdout.write("🟡 No se encontró ningún servidor corriendo")
+                self.stdout.write("No se encontró ningún servidor corriendo")
         except Exception as e:
-            self.stdout.write(f"❌ Error al detener servidor: {e}")
+            self.stdout.write(f"Error al detener servidor: {e}")
 
     def restart_server(self, host, port, auto_migrate):
         """Reinicia el servidor Django"""
-        self.stdout.write("🔄 Reiniciando servidor...")
+        self.stdout.write("Reiniciando servidor...")
         self.stop_server()
         time.sleep(1)
         self.start_server(host, port, auto_migrate)
@@ -88,21 +88,21 @@ class Command(BaseCommand):
                                   capture_output=True, text=True)
             if result.stdout:
                 pids = result.stdout.strip().split('\n')
-                self.stdout.write(f"✅ Servidor corriendo (PIDs: {', '.join(pids)})")
+                self.stdout.write(f"Servidor corriendo (PIDs: {', '.join(pids)})")
             else:
-                self.stdout.write("🔴 Servidor detenido")
+                self.stdout.write("Servidor detenido")
         except Exception as e:
-            self.stdout.write(f"❌ Error al verificar estado: {e}")
+            self.stdout.write(f"Error al verificar estado: {e}")
 
     def dev_mode(self, host, port):
         """Modo desarrollo completo con migraciones automáticas"""
-        self.stdout.write("🛠️  Modo desarrollo activado")
-        self.stdout.write("📦 Aplicando migraciones...")
+        self.stdout.write("Modo desarrollo activado")
+        self.stdout.write("Aplicando migraciones...")
         execute_from_command_line(['manage.py', 'migrate'])
         
-        self.stdout.write("👤 Verificando superusuario...")
+        self.stdout.write("Verificando superusuario...")
         # Aquí podrías agregar lógica para crear superusuario si no existe
         
-        self.stdout.write(f"🚀 Iniciando servidor en modo desarrollo en http://{host}:{port}")
-        self.stdout.write("💡 Usa Ctrl+C para detener el servidor")
+        self.stdout.write(f"Iniciando servidor en modo desarrollo en http://{host}:{port}")
+        self.stdout.write("Usa Ctrl+C para detener el servidor")
         execute_from_command_line(['manage.py', 'runserver', f'{host}:{port}'])

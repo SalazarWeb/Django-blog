@@ -1,8 +1,7 @@
 from django.urls import path
 from . import views
 
-urlpatterns = [
-    # URLs principales (sistema de archivos)
+urlpatterns = [ 
     path('files/posts/', views.FilePostListView.as_view(), name='file-post-list'),
     path('files/posts/<slug:slug>/', views.FilePostDetailView.as_view(), name='file-post-detail'),
     path('files/categories/', views.FileCategoryListView.as_view(), name='file-category-list'),

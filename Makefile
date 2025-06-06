@@ -5,7 +5,7 @@
 
 # Comandos disponibles
 help:
-	@echo "🛠️  Comandos disponibles:"
+	@echo "Comandos disponibles:"
 	@echo "  make start     - Iniciar servidor Django"
 	@echo "  make stop      - Detener servidor Django"
 	@echo "  make restart   - Reiniciar servidor Django"
@@ -18,16 +18,16 @@ help:
 
 # Iniciar solo Django
 start:
-	@echo "🚀 Iniciando servidor Django..."
+	@echo "Iniciando servidor Django..."
 	@cd backend && python3 manage.py migrate
 	@cd backend && python3 manage.py runserver 0.0.0.0:8000
 
 # Detener servidor
 stop:
-	@echo "🔴 Deteniendo servidores..."
+	@echo "Deteniendo servidores..."
 	@pkill -f "manage.py runserver" || echo "Django ya estaba detenido"
 	@pkill -f "npm run dev" || echo "React ya estaba detenido"
-	@echo "✅ Servidores detenidos"
+	@echo "Servidores detenidos"
 
 # Reiniciar servidor
 restart: stop start
@@ -38,15 +38,15 @@ dev:
 
 # Instalar dependencias
 install:
-	@echo "📦 Instalando dependencias..."
+	@echo "Instalando dependencias..."
 	@cd frontend && npm install
-	@echo "✅ Dependencias instaladas"
+	@echo "Dependencias instaladas"
 
 # Aplicar migraciones
 migrate:
-	@echo "📦 Aplicando migraciones..."
+	@echo "Aplicando migraciones..."
 	@cd backend && python3 manage.py migrate
-	@echo "✅ Migraciones aplicadas"
+	@echo "Migraciones aplicadas"
 
 # Shell de Django
 shell:
@@ -58,7 +58,7 @@ admin:
 
 # Limpiar archivos temporales
 clean:
-	@echo "🧹 Limpiando archivos temporales..."
+	@echo "Limpiando archivos temporales..."
 	@find . -name "__pycache__" -type d -exec rm -rf {} + 2>/dev/null || true
 	@find . -name "*.pyc" -delete 2>/dev/null || true
-	@echo "✅ Limpieza completada"
+	@echo "Limpieza completada"

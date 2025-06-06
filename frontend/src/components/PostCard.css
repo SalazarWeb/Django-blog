@@ -5,6 +5,8 @@
   overflow: hidden;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   margin-bottom: 2rem;
+  width: 100%;
+  max-width: 100%;
 }
 
 .post-card:hover {
@@ -26,6 +28,14 @@
 
 .post-content {
   padding: 1.5rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 480px) {
+  .post-content {
+    padding: 1rem;
+  }
 }
 
 .post-meta {
@@ -33,7 +43,9 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1rem;
-  font-size: 0.9rem;
+  font-size: clamp(0.8rem, 2vw, 0.9rem);
+  gap: 0.5rem;
+  flex-wrap: wrap;
 }
 
 .post-category {
@@ -42,16 +54,22 @@
   padding: 0.25rem 0.75rem;
   border-radius: 12px;
   font-weight: 500;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .post-date {
   color: #7f8c8d;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .post-title {
   margin: 0 0 1rem 0;
-  font-size: 1.5rem;
+  font-size: clamp(1.2rem, 3vw, 1.5rem);
   line-height: 1.3;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .post-title a {
@@ -68,26 +86,37 @@
   color: #555;
   line-height: 1.6;
   margin-bottom: 1rem;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  font-size: clamp(0.9rem, 2.2vw, 1rem);
 }
 
 .post-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 0.9rem;
+  font-size: clamp(0.8rem, 2vw, 0.9rem);
   color: #7f8c8d;
+  gap: 0.5rem;
+  flex-wrap: wrap;
 }
 
 .post-author {
   font-weight: 500;
+  word-wrap: break-word;
 }
 
 .post-comments {
   color: #95a5a6;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .post-tags {
   margin: 10px 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
 }
 
 .tag {
@@ -96,9 +125,9 @@
   color: white;
   padding: 2px 8px;
   border-radius: 12px;
-  font-size: 0.8em;
-  margin-right: 5px;
-  margin-bottom: 3px;
+  font-size: clamp(0.7rem, 1.8vw, 0.8rem);
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .post-file-type {
@@ -106,8 +135,10 @@
   color: white;
   padding: 2px 6px;
   border-radius: 4px;
-  font-size: 0.8em;
+  font-size: clamp(0.7rem, 1.8vw, 0.8rem);
   margin-left: 10px;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .post-updated {
@@ -116,6 +147,8 @@
   background: #f8f9fa;
   border-left: 3px solid #007bff;
   color: #6c757d;
+  font-size: clamp(0.8rem, 2vw, 0.9rem);
+  word-wrap: break-word;
 }
 
 .comments-info {
@@ -124,4 +157,30 @@
   background: #f8f9fa;
   border-radius: 8px;
   color: #6c757d;
+  font-size: clamp(0.9rem, 2.2vw, 1rem);
+  word-wrap: break-word;
+}
+
+/* Responsive ajustes específicos */
+@media (max-width: 480px) {
+  .post-meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+  
+  .post-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+  
+  .post-tags {
+    margin: 8px 0;
+  }
+  
+  .post-file-type {
+    margin-left: 0;
+    margin-top: 5px;
+  }
 }

@@ -1,7 +1,5 @@
 from rest_framework import serializers
-
-
-# Serializers para el sistema de archivos (principal)
+ 
 class FilePostListSerializer(serializers.Serializer):
     """Serializer para lista de posts desde archivos"""
     id = serializers.IntegerField()

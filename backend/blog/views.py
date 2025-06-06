@@ -96,8 +96,7 @@ def file_search_posts(request):
     if query:
         file_service = FilePostService()
         posts = file_service.search_posts(query)
-        
-        # Filtrar solo posts publicados
+         
         posts = [post for post in posts if post.get('status') == 'published']
         
         serializer = FilePostListSerializer(posts, many=True)

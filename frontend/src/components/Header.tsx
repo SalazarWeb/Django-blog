@@ -35,7 +35,7 @@ const Header = () => {
               className="search-input"
             />
             <button type="submit" className="search-button">
-              🔍
+              Buscar
             </button>
           </form>
         </div>

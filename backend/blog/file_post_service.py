@@ -1,5 +1,4 @@
 import os
-import json
 import markdown
 import frontmatter
 from pathlib import Path
@@ -9,11 +8,12 @@ from typing import List, Dict, Optional
 
 class FilePostService:
     """
-    Servicio para manejar posts almacenados como archivos .md y .json
+    Servicio para manejar posts almacenados como archivos .md
     """
     
     def __init__(self):
-        self.posts_directory = Path(settings.BASE_DIR) / 'posts_data'
+        # Apuntar a la carpeta posts_data en el directorio raíz del proyecto
+        self.posts_directory = Path(settings.BASE_DIR).parent / 'posts_data'
         self.ensure_posts_directory()
     
     def ensure_posts_directory(self):
@@ -21,15 +21,14 @@ class FilePostService:
         self.posts_directory.mkdir(exist_ok=True)
     
     def get_all_posts(self) -> List[Dict]:
-        """Obtener todos los posts desde archivos"""
+        """Obtener todos los posts desde archivos Markdown"""
         posts = []
         
-        # Buscar archivos .md y .json en el directorio
-        for file_path in self.posts_directory.glob('*'):
-            if file_path.suffix.lower() in ['.md', '.json']:
-                post_data = self._load_post_from_file(file_path)
-                if post_data:
-                    posts.append(post_data)
+        # Buscar solo archivos .md en el directorio
+        for file_path in self.posts_directory.glob('*.md'):
+            post_data = self._load_markdown_post(file_path)
+            if post_data:
+                posts.append(post_data)
         
         # Ordenar por fecha de creación (más recientes primero)
         posts.sort(key=lambda x: x.get('created_at', ''), reverse=True)
@@ -76,75 +75,39 @@ class FilePostService:
         
         return sorted(list(categories))
     
-    def _load_post_from_file(self, file_path: Path) -> Optional[Dict]:
-        """Cargar un post desde un archivo específico"""
+    def _load_markdown_post(self, file_path: Path) -> Dict:
+        """Cargar post desde archivo Markdown con frontmatter"""
         try:
-            if file_path.suffix.lower() == '.md':
-                return self._load_markdown_post(file_path)
-            elif file_path.suffix.lower() == '.json':
-                return self._load_json_post(file_path)
+            with open(file_path, 'r', encoding='utf-8') as f:
+                post = frontmatter.load(f)
+            
+            # Convertir Markdown a HTML
+            html_content = markdown.markdown(post.content, extensions=['codehilite', 'fenced_code'])
+            
+            # Extraer metadatos del frontmatter
+            metadata = post.metadata
+            
+            return {
+                'id': self._generate_id_from_filename(file_path.stem),
+                'title': metadata.get('title', file_path.stem),
+                'slug': metadata.get('slug', file_path.stem),
+                'content': html_content,
+                'raw_content': post.content,  # Contenido markdown original
+                'excerpt': metadata.get('excerpt', self._generate_excerpt(post.content)),
+                'category': metadata.get('category', 'General'),
+                'author': metadata.get('author', 'Admin'),
+                'featured_image': metadata.get('featured_image', ''),
+                'status': metadata.get('status', 'published'),
+                'created_at': self._parse_date(metadata.get('created_at', file_path.stat().st_ctime)),
+                'updated_at': self._parse_date(metadata.get('updated_at', file_path.stat().st_mtime)),
+                'published_at': self._parse_date(metadata.get('published_at', metadata.get('created_at', file_path.stat().st_ctime))),
+                'tags': metadata.get('tags', []),
+                'file_path': str(file_path),
+                'file_type': 'markdown'
+            }
         except Exception as e:
             print(f"Error cargando archivo {file_path}: {e}")
             return None
-    
-    def _load_markdown_post(self, file_path: Path) -> Dict:
-        """Cargar post desde archivo Markdown con frontmatter"""
-        with open(file_path, 'r', encoding='utf-8') as f:
-            post = frontmatter.load(f)
-        
-        # Convertir Markdown a HTML
-        html_content = markdown.markdown(post.content, extensions=['codehilite', 'fenced_code'])
-        
-        # Extraer metadatos del frontmatter
-        metadata = post.metadata
-        
-        return {
-            'id': self._generate_id_from_filename(file_path.stem),
-            'title': metadata.get('title', file_path.stem),
-            'slug': metadata.get('slug', file_path.stem),
-            'content': html_content,
-            'raw_content': post.content,  # Contenido markdown original
-            'excerpt': metadata.get('excerpt', self._generate_excerpt(post.content)),
-            'category': metadata.get('category', 'General'),
-            'author': metadata.get('author', 'Admin'),
-            'featured_image': metadata.get('featured_image', ''),
-            'status': metadata.get('status', 'published'),
-            'created_at': self._parse_date(metadata.get('created_at', file_path.stat().st_ctime)),
-            'updated_at': self._parse_date(metadata.get('updated_at', file_path.stat().st_mtime)),
-            'published_at': self._parse_date(metadata.get('published_at', metadata.get('created_at', file_path.stat().st_ctime))),
-            'tags': metadata.get('tags', []),
-            'file_path': str(file_path),
-            'file_type': 'markdown'
-        }
-    
-    def _load_json_post(self, file_path: Path) -> Dict:
-        """Cargar post desde archivo JSON"""
-        with open(file_path, 'r', encoding='utf-8') as f:
-            data = json.load(f)
-        
-        # Convertir Markdown a HTML si el contenido está en formato markdown
-        content = data.get('content', '')
-        if data.get('content_type', 'html') == 'markdown':
-            content = markdown.markdown(content, extensions=['codehilite', 'fenced_code'])
-        
-        return {
-            'id': data.get('id', self._generate_id_from_filename(file_path.stem)),
-            'title': data.get('title', file_path.stem),
-            'slug': data.get('slug', file_path.stem),
-            'content': content,
-            'raw_content': data.get('content', ''),
-            'excerpt': data.get('excerpt', self._generate_excerpt(data.get('content', ''))),
-            'category': data.get('category', 'General'),
-            'author': data.get('author', 'Admin'),
-            'featured_image': data.get('featured_image', ''),
-            'status': data.get('status', 'published'),
-            'created_at': self._parse_date(data.get('created_at', file_path.stat().st_ctime)),
-            'updated_at': self._parse_date(data.get('updated_at', file_path.stat().st_mtime)),
-            'published_at': self._parse_date(data.get('published_at', data.get('created_at', file_path.stat().st_ctime))),
-            'tags': data.get('tags', []),
-            'file_path': str(file_path),
-            'file_type': 'json'
-        }
     
     def _generate_id_from_filename(self, filename: str) -> int:
         """Generar un ID único basado en el nombre del archivo"""

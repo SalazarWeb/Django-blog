@@ -69,7 +69,7 @@ const PostDetail = () => {
               <span className="post-category">{post.category}</span>
               <span className="post-date">{formatDate(post.published_at || post.created_at)}</span>
               {post.file_type && (
-                <span className="post-file-type">📄 {post.file_type}</span>
+                <span className="post-file-type">{post.file_type}</span>
               )}
             </div>
             <h1 className="post-title">{post.title}</h1>
@@ -101,13 +101,6 @@ const PostDetail = () => {
             </div>
           )}
         </article>
-
-        <section className="comments-section">
-          <div className="comments-info">
-            <p>💬 Los comentarios están deshabilitados para posts desde archivos.</p>
-            <p>Para habilitar comentarios, considera migrar este post a la base de datos.</p>
-          </div>
-        </section>
       </div>
     </div>
   );
