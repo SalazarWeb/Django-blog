@@ -1,12 +1,15 @@
 from pathlib import Path
+from decouple import config
+import dj_database_url
+import os
  
 BASE_DIR = Path(__file__).resolve().parent.parent
  
-SECRET_KEY = 'django-insecure-%+wb@tww*z#l3cwk0vdr+y^f(*ae_horfd4pu8j2fa@*o(0@j1'
+SECRET_KEY = config('SECRET_KEY', default='django-insecure-%+wb@tww*z#l3cwk0vdr+y^f(*ae_horfd4pu8j2fa@*o(0@j1')
 
-DEBUG = True
+DEBUG = config('DEBUG', default=True, cast=bool)
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='127.0.0.1,localhost').split(',')
 
 SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
@@ -27,6 +30,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'blog.middleware.SecurityMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -56,12 +60,18 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'blog_project.wsgi.application'
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+# Database configuration for production and development
+if config('DATABASE_URL', default=None):
+    DATABASES = {
+        'default': dj_database_url.parse(config('DATABASE_URL'))
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -86,7 +96,11 @@ USE_I18N = True
 
 USE_TZ = True
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# WhiteNoise configuration
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
  
@@ -98,17 +112,21 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 10
 }
  
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
-    "http://127.0.0.1:5173",
-]
+# CORS configuration for production
+if DEBUG:
+    CORS_ALLOWED_ORIGINS = [
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+    ]
+else:
+    CORS_ALLOWED_ORIGINS = [
+        "https://your-frontend-app.onrender.com",  # Cambia esto por tu URL de frontend
+    ]
 
 CORS_ALLOW_CREDENTIALS = True
  
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
- 
-STATIC_ROOT = BASE_DIR / 'staticfiles'
  
 LOGGING = {
     'version': 1,

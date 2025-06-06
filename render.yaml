@@ -1,0 +1,30 @@
+services:
+  - type: web
+    name: django-blog-backend
+    runtime: python3
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn blog_project.wsgi:application"
+    plan: free
+    autoDeploy: false
+    envVars:
+      - key: DEBUG
+        value: false
+      - key: SECRET_KEY
+        generateValue: true
+      - key: WEB_CONCURRENCY
+        value: 4
+
+  - type: web
+    name: django-blog-frontend
+    runtime: node
+    buildCommand: "npm ci && npm run build"
+    startCommand: "npm run preview"
+    plan: free
+    autoDeploy: false
+    rootDir: ./frontend
+
+databases:
+  - name: django-blog-db
+    databaseName: blog_db
+    user: blog_user
+    plan: free

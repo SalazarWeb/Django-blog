@@ -1,7 +1,10 @@
 import axios from 'axios';
 import type { FilePost, FileCategory } from '../types';
 
-const API_BASE_URL = 'http://localhost:8000/api/blog';
+// Configuración de URL base dependiendo del entorno
+const API_BASE_URL = import.meta.env.PROD 
+  ? 'https://your-backend-app.onrender.com/api/blog'  // Cambia esto por tu URL de backend en Render
+  : 'http://localhost:8000/api/blog';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
