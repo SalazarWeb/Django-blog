@@ -1,15 +1,15 @@
 from rest_framework import generics, status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework.views import APIView
 from .serializers import (
     FilePostListSerializer, FilePostDetailSerializer, FileCategorySerializer
 )
 from .file_post_service import FilePostService
 
 # Vistas principales que usan archivos
-class FilePostListView(generics.GenericAPIView):
+class FilePostListView(APIView):
     """Vista para listar posts desde archivos"""
-    serializer_class = FilePostListSerializer
     
     def get(self, request):
         file_service = FilePostService()
@@ -23,13 +23,12 @@ class FilePostListView(generics.GenericAPIView):
         # Filtrar solo posts publicados
         posts = [post for post in posts if post.get('status') == 'published']
         
-        serializer = self.serializer_class(posts, many=True)
+        serializer = FilePostListSerializer(posts, many=True)
         return Response(serializer.data)
 
 
-class FilePostDetailView(generics.GenericAPIView):
+class FilePostDetailView(APIView):
     """Vista para detalle de post desde archivo"""
-    serializer_class = FilePostDetailSerializer
     
     def get(self, request, slug):
         file_service = FilePostService()
@@ -41,13 +40,12 @@ class FilePostDetailView(generics.GenericAPIView):
         if post.get('status') != 'published':
             return Response({'error': 'Post not found'}, status=status.HTTP_404_NOT_FOUND)
         
-        serializer = self.serializer_class(post)
+        serializer = FilePostDetailSerializer(post)
         return Response(serializer.data)
 
 
-class FileCategoryListView(generics.GenericAPIView):
+class FileCategoryListView(APIView):
     """Vista para listar categorías desde archivos"""
-    serializer_class = FileCategorySerializer
     
     def get(self, request):
         file_service = FilePostService()
@@ -56,7 +54,7 @@ class FileCategoryListView(generics.GenericAPIView):
         # Convertir a formato esperado por el serializer
         category_data = [{'name': cat} for cat in categories]
         
-        serializer = self.serializer_class(category_data, many=True)
+        serializer = FileCategorySerializer(category_data, many=True)
         return Response(serializer.data)
 
 
