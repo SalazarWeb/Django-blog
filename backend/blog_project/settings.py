@@ -109,21 +109,42 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 10
 }
  
-# CORS configuration - Simplificar para evitar conflictos
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
-    "http://127.0.0.1:5173",
-    "https://django-blog-frontend.onrender.com",
-    "https://django-blog-backend-z9kg.onrender.com",
-]
-
+# CORS configuration - Configuración optimizada para producción
 CORS_ALLOW_ALL_ORIGINS = config('CORS_ALLOW_ALL_ORIGINS', default=False, cast=bool)
 
-CORS_ALLOW_CREDENTIALS = True
- 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+if CORS_ALLOW_ALL_ORIGINS:
+    CORS_ALLOW_ALL_ORIGINS = True
+else:
+    CORS_ALLOWED_ORIGINS = [
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+        "https://django-blog-frontend.onrender.com",
+        "https://django-blog-backend-z9kg.onrender.com",
+    ]
 
+# Configuración adicional de CORS para producción
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+]
+
+CORS_ALLOW_METHODS = [
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+]
+ 
 # Security settings for production - Simplificar
 if not DEBUG:
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
