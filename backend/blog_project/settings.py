@@ -60,7 +60,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'blog_project.wsgi.application'
 
-# Database configuration for production and development
+# Database configuration for Render
 DATABASE_URL = config('DATABASE_URL', default=None)
 if DATABASE_URL:
     DATABASES = {
@@ -90,17 +90,13 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_TZ = True
 
+# Static files configuration for Render
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-
-# WhiteNoise configuration
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
@@ -113,7 +109,7 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 10
 }
  
-# CORS configuration for production
+# CORS configuration
 if DEBUG:
     CORS_ALLOWED_ORIGINS = [
         "http://localhost:5173",
@@ -121,13 +117,21 @@ if DEBUG:
     ]
 else:
     CORS_ALLOWED_ORIGINS = [
-        "https://your-frontend-app.onrender.com",  # Cambia esto por tu URL de frontend
+        "https://django-blog-frontend.onrender.com",  # Actualiza con tu URL real
     ]
 
 CORS_ALLOW_CREDENTIALS = True
  
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+# Security settings for production
+if not DEBUG:
+    SECURE_SSL_REDIRECT = True
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SECURE_HSTS_SECONDS = 31536000
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
  
 LOGGING = {
     'version': 1,
@@ -143,12 +147,6 @@ LOGGING = {
         },
     },
     'handlers': {
-        'security_file': {
-            'level': 'WARNING',
-            'class': 'logging.FileHandler',
-            'filename': BASE_DIR / 'security.log',
-            'formatter': 'verbose',
-        },
         'console': {
             'level': 'INFO',
             'class': 'logging.StreamHandler',
@@ -157,7 +155,7 @@ LOGGING = {
     },
     'loggers': {
         'blog.middleware': {
-            'handlers': ['security_file', 'console'],
+            'handlers': ['console'],
             'level': 'WARNING',
             'propagate': True,
         },
