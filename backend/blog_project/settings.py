@@ -109,30 +109,29 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 10
 }
  
-# CORS configuration
-if DEBUG:
-    CORS_ALLOWED_ORIGINS = [
-        "http://localhost:5173",
-        "http://127.0.0.1:5173",
-    ]
-else:
-    CORS_ALLOWED_ORIGINS = [
-        "https://django-blog-frontend.onrender.com",  # URL del frontend que vamos a crear
-        "https://django-blog-backend-z9kg.onrender.com",  # Para el admin
-    ]
+# CORS configuration - Simplificar para evitar conflictos
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+    "https://django-blog-frontend.onrender.com",
+    "https://django-blog-backend-z9kg.onrender.com",
+]
+
+CORS_ALLOW_ALL_ORIGINS = config('CORS_ALLOW_ALL_ORIGINS', default=False, cast=bool)
 
 CORS_ALLOW_CREDENTIALS = True
  
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-# Security settings for production
+# Security settings for production - Simplificar
 if not DEBUG:
-    SECURE_SSL_REDIRECT = True
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-    SECURE_HSTS_SECONDS = 31536000
-    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-    SECURE_HSTS_PRELOAD = True
+    # Comentar estas líneas que pueden causar problemas en Render
+    # SECURE_SSL_REDIRECT = True
+    # SECURE_HSTS_SECONDS = 31536000
+    # SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    # SECURE_HSTS_PRELOAD = True
  
 LOGGING = {
     'version': 1,
