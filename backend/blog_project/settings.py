@@ -117,7 +117,8 @@ if DEBUG:
     ]
 else:
     CORS_ALLOWED_ORIGINS = [
-        "https://django-blog-frontend.onrender.com",  # Actualiza con tu URL real
+        "https://django-blog-frontend.onrender.com",  # URL del frontend que vamos a crear
+        "https://django-blog-backend-z9kg.onrender.com",  # Para el admin
     ]
 
 CORS_ALLOW_CREDENTIALS = True

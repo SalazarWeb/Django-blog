@@ -3,7 +3,7 @@ import type { FilePost, FileCategory } from '../types';
 
 // Configuración de URL base dependiendo del entorno
 const API_BASE_URL = import.meta.env.PROD 
-  ? 'https://your-backend-app.onrender.com/api/blog'  // Cambia esto por tu URL de backend en Render
+  ? 'https://django-blog-backend-z9kg.onrender.com/api/blog'
   : 'http://localhost:8000/api/blog';
 
 const api = axios.create({
